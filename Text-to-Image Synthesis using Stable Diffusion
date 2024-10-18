@@ -1,0 +1,28 @@
+ #Text-to-Image Synthesis using Stable Diffusion
+import torch
+from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
+
+# Install necessary libraries if you haven't already
+# !pip install torch transformers diffusers accelerate
+
+# Use DPMSolverMultistepScheduler for faster inference
+pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4", scheduler=DPMSolverMultistepScheduler.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="scheduler"))
+
+# Use GPU if available
+device = "cuda" if torch.cuda.is_available() else "cpu"
+pipe = pipe.to(device)
+
+# Get text input from the user
+prompt = input("Enter a text prompt to generate an image: ")
+
+# Generate the image
+image = pipe(prompt).images[0]
+
+# Save the image
+image.save("generated_image.png")
+
+print("Image saved as generated_image.png")
+
+from IPython.display import Image
+# Assuming the image is saved as "generated_image.png"
+display(Image("generated_image.png"))
